@@ -1,28 +1,13 @@
 #!/usr/bin/env python3
-
-"""
-Module to plot a line graph.
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_line_graph():
-    """
-    Function to plot a line graph.
-    
-    y should be plotted as a solid red line
-    The x-axis should range from 0 to 10
-    """
-    y = np.arange(0, 11) ** 3
-    x = np.arange(0, 11)
+y = np.arange(0, 11) ** 3
 
-    plt.plot(x, y, color='red')
-    plt.xlabel('X-axis')
-    plt.ylabel('Y-axis')
-    plt.title('Line Graph')
-    plt.grid(True)
-    plt.show()
-
-if __name__ == "__main__":
-    plot_line_graph()
+plt.plot(np.arange(0, 11), y, 'r-')  # 'r-' for solid red line
+plt.xlim(0, 10)  # setting x-axis limit
+plt.xlabel('X-axis')  # label for x-axis
+plt.ylabel('Y-axis')  # label for y-axis
+plt.title('Line Plot of y = x^3')  # title of the plot
+plt.grid(True)  # enabling grid
+plt.show()  # displaying the plot
