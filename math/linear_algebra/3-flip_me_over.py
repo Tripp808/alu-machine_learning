@@ -1,18 +1,8 @@
 #!/usr/bin/env python3
 
 def matrix_transpose(matrix):
-    # Get the dimensions of the original matrix
-    rows = len(matrix)
-    cols = len(matrix[0])
-
-    # Create a new matrix to store the transpose
-    transpose_matrix = [[0 for _ in range(rows)] for _ in range(cols)]
-
-    # Iterate over the original matrix and fill the transpose matrix
-    for i in range(rows):
-        for j in range(cols):
-            transpose_matrix[j][i] = matrix[i][j]
-
+    # Transpose the matrix using zip(*matrix)
+    transpose_matrix = [list(row) for row in zip(*matrix)]
     return transpose_matrix
 
 # Test cases
