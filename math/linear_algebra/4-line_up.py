@@ -14,12 +14,15 @@ def add_arrays(arr1, arr2):
         arr2 (list): Second array.
 
     Returns:
-        list: New list containing the element-wise sum of arr1 and arr2, or None if arrays are not the same shape.
+        list: New list containing the element-wise sum of arr1 and arr2, or None
     """
     if len(arr1) != len(arr2):
         return None
     else:
-        return [a + b for a, b in zip(arr1, arr2)]
+        return [
+            a + b
+            for a, b in zip(arr1, arr2)
+        ]
 
 
 if __name__ == "__main__":
