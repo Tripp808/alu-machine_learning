@@ -32,8 +32,8 @@ def mat_mul(mat1, mat2):
         row = []
         for j in range(len(mat2[0])):
             # Calculate dot product
-            p = sum(m1 * m2 for m1, m2 in zip(mat1[i], (row[j] for row in mat2)))
-            row.append(p)
+            dot_product = sum(m1 * m2 for m1, m2 in zip(mat1[i], (row[j] for row in mat2)))
+            row.append(dot_product)
         result.append(row)
 
     return result
@@ -47,4 +47,3 @@ if __name__ == "__main__":
     mat2 = [[1, 2, 3, 4],
             [5, 6, 7, 8]]
     print(mat_mul(mat1, mat2))
-
