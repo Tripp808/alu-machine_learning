@@ -27,9 +27,7 @@ def mat_mul(mat1, mat2):
     for i in range(len(mat1)):
         row = []
         for j in range(len(mat2[0])):
-            # Dot product of row i of mat1 and column j of mat2
-            dot_product = sum(mat1[i][k] * mat2[k][j]
-        for k in range(len(mat1[0])))
+            dot_product = sum(mat1[i][k] * mat2[k][j] for k in range(len(mat1[0])))
             row.append(dot_product)
         result.append(row)
 
@@ -43,4 +41,4 @@ if __name__ == "__main__":
             [5, 6]]
     mat2 = [[1, 2, 3, 4],
             [5, 6, 7, 8]]
-    print(mat_mul(mat1, mat2))  # Output: [[11, 14, 17, 20], [23, 30, 37, 44], [35, 46, 57, 68]]
+    print(mat_mul(mat1, mat2))  
