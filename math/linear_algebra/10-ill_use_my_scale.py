@@ -19,8 +19,7 @@ def np_shape(matrix):
     shapes = {
         0: lambda m: (),
         1: lambda m: (len(m),),
-        2: lambda m: (len(m),) + (len(m[0]),) * (len(m) > 0),
-        3: lambda m: (len(m),) + (len(m[0]),) * (len(m) > 0) + (len(m[0][0]),) * (len(m) > 0 and len(m[0]) > 0),
+        2: lambda m: (len(m), len(m[0])),
         # Extend this pattern to handle higher dimensions needed
     }
     return shapes.get(len(matrix), lambda m: ()) (matrix)
