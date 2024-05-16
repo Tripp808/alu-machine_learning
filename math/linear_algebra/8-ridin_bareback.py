@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+
 """
 This module defines a function for performing matrix multiplication.
 """
+
 
 def mat_mul(mat1, mat2):
     """
@@ -30,8 +32,8 @@ def mat_mul(mat1, mat2):
         row = []
         for j in range(len(mat2[0])):
             # Calculate dot product
-            dot_product = sum(mat1[i][k] * mat2[k][j] for k in range(mat1_cols))
-            row.append(dot_product)
+            p = sum(m1 * m2 for m1, m2 in zip(mat1[i], (row[j] for row in mat2)))
+            row.append(p)
         result.append(row)
 
     return result
@@ -45,3 +47,4 @@ if __name__ == "__main__":
     mat2 = [[1, 2, 3, 4],
             [5, 6, 7, 8]]
     print(mat_mul(mat1, mat2))
+
