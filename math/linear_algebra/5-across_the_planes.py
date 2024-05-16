@@ -33,6 +33,7 @@ def add_matrices2D(mat1, mat2):
 
     return result
 
+
 if __name__ == "__main__":
     # Test cases
     mat1 = [[1, 2], [3, 4]]
