@@ -14,7 +14,7 @@ def mat_mul(mat1, mat2):
         mat2 (list): The second matrix.
 
     Returns:
-        list: matrix resulting from multiplication of mat1 and mat2.
+        list: A new matrix resulting from the multiplication of mat1 and mat2.    
     """
     # Check if matrices can be multiplied (columns of mat1 == rows of mat2)
     if len(mat1[0]) != len(mat2):
