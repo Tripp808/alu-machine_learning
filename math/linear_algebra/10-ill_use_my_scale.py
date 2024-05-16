@@ -11,7 +11,7 @@ def np_shape(matrix):
     Calculates the shape of a numpy.ndarray.
 
     Parameters:
-    matrix (numpy.ndarray): The input numpy array.
+    matrix (list): The input list representing a numpy array.
 
     Returns:
     tuple: A tuple representing the shape of the input array.
@@ -19,11 +19,11 @@ def np_shape(matrix):
     shapes = {
         0: lambda m: (),
         1: lambda m: (len(m),),
-        2: lambda m: (len(m),) * len(m[0]),
-        3: lambda m: (len(m),) * len(m[0]) * len(m[0][0]),
-        # Extend this pattern to handle higher dimensions 
+        2: lambda m: (len(m),) + (len(m[0]),) * (len(m) > 0),
+        3: lambda m: (len(m),) + (len(m[0]),) * (len(m) > 0) + (len(m[0][0]),) * (len(m) > 0 and len(m[0]) > 0),
+        # Extend this pattern to handle higher dimensions needed
     }
-    return shapes.get(matrix.ndim, lambda m: ()) (matrix)
+    return shapes.get(len(matrix), lambda m: ()) (matrix)
 
 # Sample matrices
 mat1 = [1, 2, 3, 4, 5, 6]
