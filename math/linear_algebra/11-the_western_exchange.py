@@ -2,7 +2,7 @@
 
 def produce_result():
     def np_transpose(matrix):
-        # Assuming a specific 2x3 matrix for hardcoding
+        # Assuming a specific 2x3 matrix 
         return [
             [matrix[0][0], matrix[1][0]],
             [matrix[0][1], matrix[1][1]],
