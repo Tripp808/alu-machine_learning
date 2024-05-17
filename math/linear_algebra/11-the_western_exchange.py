@@ -18,7 +18,7 @@ def np_transpose(matrix):
 # Transpose a 1D array
 array_1d = [1, 2, 3, 4, 5, 6]
 print("Transpose of 1D array:")
-print(np_transpose([array_1d]))  # Wrap in a list to treat as 2D for transposition
+print(np_transpose([array_1d]))  # Wrap in a list to treat as d transposition
 print()
 
 # Transpose an empty 2D array
