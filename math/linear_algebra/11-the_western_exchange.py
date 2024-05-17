@@ -5,20 +5,20 @@ def np_transpose(matrix):
     Transpose the given matrix.
 
     Args:
-    matrix: A matrix that can be interpreted as a numpy ndarray.
+    matrix: A matrix represented as a list of lists.
             It can be a 1D, 2D, or 3D matrix.
 
     Returns:
     Transposed version of the input matrix.
     """
-    return matrix.T
+    return list(map(list, zip(*matrix)))
 
 # Example usage (this will run directly when the script is executed):
 
 # Transpose a 1D array
-array_1d = [[1, 2, 3, 4, 5, 6]]
+array_1d = [1, 2, 3, 4, 5, 6]
 print("Transpose of 1D array:")
-print(np_transpose(array_1d))
+print(np_transpose([array_1d]))  # Wrap in a list to treat as 2D for transposition
 print()
 
 # Transpose an empty 2D array
@@ -27,7 +27,7 @@ print("Transpose of empty 2D array:")
 print(np_transpose(array_2d_empty))
 print()
 
-# Transpose a 3D array
+# Transpose a 3D array (list of lists of lists)
 array_3d = [[[ 1, 11],
              [ 6, 16]],
              
@@ -46,7 +46,7 @@ print("Transpose of 3D array:")
 print(np_transpose(array_3d))
 print()
 
-# Transpose another 3D array
+# Transpose another 3D array (list of lists of lists)
 array_3d_another = [[[ 1,  2,  3,  4,  5],
                      [ 6,  7,  8,  9, 10]],
 
