@@ -2,12 +2,12 @@
 
 
 """
-This script defines a function np_shape(matrix).
+Script for shape
 """
 
 
 def np_shape(matrix):
     """
-    Calculates the shape of a numpy.ndarray without using loops, conditionals, or imports.
+    return matrix
     """
     return getattr(matrix, 'shape', ()) * hasattr(matrix, 'shape')
