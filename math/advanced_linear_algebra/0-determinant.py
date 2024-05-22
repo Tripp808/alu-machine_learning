@@ -3,12 +3,11 @@
 
 def determinant(matrix):
     """
-    Calculate the determinant of a matrix.
+    Calculate the determinant of a square matrix.
     """
     
-
     def get_minor(matrix, i, j):
-        """Helper function to get the minor matrix after removing the i-th row and j-th column."""
+        """Return minor matrix after removing i-th row and j-th column."""
         return [row[:j] + row[j+1:] for row in (matrix[:i] + matrix[i+1:])]
     
     # Check if matrix is a list of lists
@@ -37,9 +36,8 @@ def determinant(matrix):
     
     return det
 
-if __name__ == '__main__':
-    determinant = __import__('0-determinant').determinant
 
+if __name__ == '__main__':
     mat0 = [[]]
     mat1 = [[5]]
     mat2 = [[1, 2], [3, 4]]
@@ -52,12 +50,12 @@ if __name__ == '__main__':
     print(determinant(mat1))  # Expected output: 5
     print(determinant(mat2))  # Expected output: -2
     print(determinant(mat3))  # Expected output: 0
-    print(determinant(mat4))  # Expected output: -48
+    print(determinant(mat4))  # Expected output: 192
     try:
-        determinant(mat5)  # Should raise ValueError
+        print(determinant(mat5))  # Should raise ValueError
     except Exception as e:
         print(e)
     try:
-        determinant(mat6)  # Should raise ValueError
+        print(determinant(mat6))  # Should raise ValueError
     except Exception as e:
         print(e)
