@@ -1,39 +1,38 @@
 #!/usr/bin/env python3
-
+"""
+This module provides functions for calculating determinants of square matrices.
+"""
 
 def determinant(matrix):
     """
     Calculate the determinant of a square matrix.
     """
-    
     def get_minor(matrix, i, j):
         """Return minor matrix after removing i-th row and j-th column."""
         return [row[:j] + row[j+1:] for row in (matrix[:i] + matrix[i+1:])]
-    
+
     # Check if matrix is a list of lists
     if not isinstance(matrix, list) or any(not isinstance(row, list) for row in matrix):
         raise TypeError("matrix must be a list of lists")
-    
+
     # Check if matrix is square
     n = len(matrix)
-    if any(len(row) != n for row in matrix):
+    if n == 0 or any(len(row) != n for row in matrix):
         raise ValueError("matrix must be a square matrix")
-    
+
     # Base cases
-    if matrix == [[]]:  # 0x0 matrix
-        return 1
     if n == 1:  # 1x1 matrix
         return matrix[0][0]
     if n == 2:  # 2x2 matrix
         return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
-    
+
     # Recursive case for nxn matrix
     det = 0
     for j in range(n):
         minor = get_minor(matrix, 0, j)
         cofactor = ((-1) ** j) * matrix[0][j]
         det += cofactor * determinant(minor)
-    
+
     return det
 
 
