@@ -6,18 +6,17 @@ Module to calculate the derivative of a polynomial
 
 def poly_derivative(poly):
     """
-    Calculates the derivative of a polynomial represented by a list of coefficients.
+    Calculates the derivative of a polynomial.
 
     Parameters:
     poly (list): List of coefficients. The index represents the power of x.
 
     Returns:
-    list: Derivative of the polynomial. Returns [0] if the derivative is zero. 
-          Returns None if input is invalid.
+    list: Derivative of the polynomial. Returns [0] if the derivative is zero.
     """
     if not isinstance(poly, list) or not all(isinstance(x, (int, float)) for x in poly):
         return None
-    
+   
     if len(poly) == 0:
         return None
 
