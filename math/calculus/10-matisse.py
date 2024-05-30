@@ -21,10 +21,7 @@ def poly_derivative(poly):
         return [0]
     
     # Calculate the derivative
-    derivative = [coef * i for i, coef in enumerate(poly)][1:]
+    derivative = [coef * i for i, coef in enumerate(poly) if i != 0]
     
-    return derivative
-
-if __name__ == "__main__":
-    poly = [5, 3, 0, 1]
-    print(poly_derivative(poly))  # Output should be [3, 0, 3]
+    # If the derivative is an empty list (all terms were constant), return [0]
+    return derivative if derivative else [0]
