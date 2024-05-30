@@ -14,9 +14,10 @@ def poly_derivative(poly):
     Returns:
     list: Derivative of the polynomial. Returns [0] if the derivative is zero.
     """
-    if not isinstance(poly, list) or not all(isinstance(x, (int, float)) for x in poly):
+    if not isinstance(poly, list) or \
+       not all(isinstance(x, (int, float)) for x in poly):
         return None
-   
+
     if len(poly) == 0:
         return None
 
