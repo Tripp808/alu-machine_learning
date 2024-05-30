@@ -16,26 +16,31 @@ def poly_integral(poly, C=0):
     list: Coefficients list representing the polynomial's integral,
           or None if input is invalid.
     '''
+    # Validate input
     if not isinstance(poly, list) or not poly:
         return None
-
     if not isinstance(C, (int, float)):
         return None
-
-    integral = [C]
-
-    for i, coeff in enumerate(poly):
-        power = i + 1
-        if not isinstance(coeff, (int, float)):
+    for coefficient in poly:
+        if not isinstance(coefficient, (int, float)):
             return None
-        if coeff == 0:
+
+    # Convert C to int if it's a float and equal to an integer
+    if isinstance(C, float) and C.is_integer():
+        C = int(C)
+
+    # Calculate integral
+    integral = [C] if C != 0 else [0]
+    for power, coefficient in enumerate(poly):
+        if coefficient == 0:
             integral.append(0)
         else:
-            new_coeff = coeff / power
-            if isinstance(C, float) and new_coeff.is_integer():
-                new_coeff = int(new_coeff)
-            integral.append(new_coeff)
+            new_coefficient = coefficient / (power + 1)
+            integral.append(int(new_coefficient)
+                            if new_coefficient.is_integer()
+                            else new_coefficient)
 
+    # Remove last element if 0 and list has more than one element
     if len(integral) > 1 and integral[-1] == 0:
         integral.pop()
 
@@ -45,4 +50,3 @@ def poly_integral(poly, C=0):
 if __name__ == "__main__":
     print(poly_integral([0]))  # Output: [0]
     print(poly_integral([5]))  # Output: [0, 5]
-   
