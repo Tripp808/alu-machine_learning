@@ -28,6 +28,7 @@ def poly_derivative(poly):
 
     return derivative if derivative else [0]
 
+
 if __name__ == "__main__":
     poly = [5, 3, 0, 1]
     print(poly_derivative(poly))
