@@ -15,10 +15,12 @@ def poly_integral(poly, C=0):
     Returns:
     list: Coefficients of the integral of the polynomial.
     """
+    # Check if poly is a list of integers or floats
     if not isinstance(poly, list) or \
        not all(isinstance(x, (int, float)) for x in poly):
         return None
 
+    # Check if C is an integer
     if not isinstance(C, int):
         return None
 
@@ -27,9 +29,9 @@ def poly_integral(poly, C=0):
     for i, coeff in enumerate(poly):
         power = i + 1
         if isinstance(coeff, int):
-            integral.append(coeff // power)
-        else:
             integral.append(coeff / power)
+        else:
+            integral.append(float(coeff) / power)
 
     return integral
 
