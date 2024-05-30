@@ -1,41 +1,48 @@
 #!/usr/bin/env python3
-"""
-Module to calculate the integral of a polynomial
-"""
+'''
+Module for calculating the integral of a polynomial.
+'''
 
 
 def poly_integral(poly, C=0):
-    """
-    Calculates the integral of a polynomial.
+    '''
+    Calculate the integral of a polynomial.
 
     Parameters:
-    poly (list): List of coefficients representing a polynomial.
-    C (int): Integration constant. Default is 0.
+    poly (list): Coefficients list where index represents power of x.
+    C (int/float): Integration constant. Defaults to 0.
 
     Returns:
-    list: Coefficients of the integral of the polynomial.
-    """
-    # Check if poly is a list of integers or floats
-    if not isinstance(poly, list) or \
-       not all(isinstance(x, (int, float)) for x in poly):
+    list: Coefficients list representing the polynomial's integral,
+          or None if input is invalid.
+    '''
+    if not isinstance(poly, list) or not poly:
         return None
 
-    # Check if C is an integer
-    if not isinstance(C, int):
+    if not isinstance(C, (int, float)):
         return None
 
     integral = [C]
 
     for i, coeff in enumerate(poly):
         power = i + 1
-        if isinstance(coeff, int):
-            integral.append(coeff / power)
+        if not isinstance(coeff, (int, float)):
+            return None
+        if coeff == 0:
+            integral.append(0)
         else:
-            integral.append(float(coeff) / power)
+            new_coeff = coeff / power
+            if isinstance(C, float) and new_coeff.is_integer():
+                new_coeff = int(new_coeff)
+            integral.append(new_coeff)
+
+    if len(integral) > 1 and integral[-1] == 0:
+        integral.pop()
 
     return integral
 
 
 if __name__ == "__main__":
-    poly = [5, 3, 0, 1]
-    print(poly_integral(poly))
+    print(poly_integral([0]))  # Output: [0]
+    print(poly_integral([5]))  # Output: [0, 5]
+   
