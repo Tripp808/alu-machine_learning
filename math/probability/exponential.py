@@ -44,7 +44,7 @@ class Exponential:
         - PDF value for x
         """
         if x < 0:
-            return 0        
+            return 0
         e = 2.7182818285  # Approximation of Euler's number
         pdf_value = self.lambtha * (e ** (-self.lambtha * x))
         return pdf_value
