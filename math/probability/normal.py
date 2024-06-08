@@ -89,7 +89,8 @@ class Normal:
         erf = (2 / (3.141592653589793 ** 0.5)) * (
             z - (z ** 3) / 3 + (z ** 5) / 10 - (z ** 7) / 42 + (z ** 9) / 216
         )
-        return 0.5 * (1 + erf)
+        cdf_value = 0.5 * (1 + erf)
+        return round(cdf_value, 10)  # Round the result to 10 decimal places for consistency
 
 
 if __name__ == "__main__":
