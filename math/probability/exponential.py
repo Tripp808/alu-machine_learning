@@ -33,6 +33,23 @@ class Exponential:
                 raise ValueError("data must contain multiple values")
             self.lambtha = 1 / (sum(data) / len(data))
 
+    def pdf(self, x):
+        """
+        Calculates the PDF for a given time period
+
+        Parameters:
+        - x (float): Time period
+
+        Returns:
+        - PDF value for x
+        """
+        if x < 0:
+            return 0
+        
+        e = 2.7182818285  # Approximation of Euler's number
+        pdf_value = self.lambtha * (e ** (-self.lambtha * x))
+        return pdf_value
+
 
 if __name__ == "__main__":
     # Simulating data manually without using numpy
@@ -48,7 +65,7 @@ if __name__ == "__main__":
             0.9, 0.2, 0.4, 0.6, 0.8, 0.3, 0.5, 0.7, 0.9, 0.4]
 
     e1 = Exponential(data)
-    print('Lambtha:', e1.lambtha)
+    print('f(1):', e1.pdf(1))
 
     e2 = Exponential(lambtha=2)
-    print('Lambtha:', e2.lambtha)
+    print('f(1):', e2.pdf(1))
