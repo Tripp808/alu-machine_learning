@@ -61,6 +61,19 @@ class Normal:
         """
         return z * self.stddev + self.mean
 
+    def pdf(self, x):
+        """
+        Calculates the value of the PDF for a given x-value
+
+        Parameters:
+        - x (float): The x-value
+
+        Returns:
+        - The PDF value for x
+        """
+        exponent = -((x - self.mean) ** 2) / (2 * self.stddev ** 2)
+        return (1 / (self.stddev * (2 * 3.141592653589793) ** 0.5)) * 2.718281828459045 ** exponent
+
 
 if __name__ == "__main__":
     # Simulating data manually without using numpy
@@ -85,10 +98,7 @@ if __name__ == "__main__":
     ]
 
     n1 = Normal(data)
-    print('Z(90):', n1.z_score(90))
-    print('X(2):', n1.x_value(2))
+    print('PSI(90):', n1.pdf(90))
 
     n2 = Normal(mean=70, stddev=10)
-    print()
-    print('Z(90):', n2.z_score(90))
-    print('X(2):', n2.x_value(2))
+    print('PSI(90):', n2.pdf(90))
