@@ -33,6 +33,30 @@ class Poisson:
                 raise ValueError("data must contain multiple values")
             self.lambtha = float(sum(data) / len(data))
 
+    def pmf(self, k):
+        """
+        Calculates the PMF for a given number of successes
+
+        Parameters:
+        - k (int): Number of successes
+
+        Returns:
+        - PMF value for k
+        """
+        if not isinstance(k, int):
+            k = int(k)
+        if k < 0:
+            return 0
+
+        e = 2.7182818285  # Approximation of Euler's number
+        lambtha_k = self.lambtha ** k
+        k_factorial = 1
+        for i in range(1, k + 1):
+            k_factorial *= i
+
+        pmf_value = (e ** -self.lambtha) * lambtha_k / k_factorial
+        return pmf_value
+
 
 if __name__ == "__main__":
     # Simulating data manually without using numpy
@@ -43,7 +67,7 @@ if __name__ == "__main__":
             4, 5, 5, 4, 5, 5, 5, 5, 4, 5, 6, 5, 5, 6, 5, 5, 6, 5, 5, 6]
 
     p1 = Poisson(data)
-    print('Lambtha:', p1.lambtha)
+    print('P(9):', p1.pmf(9))
 
     p2 = Poisson(lambtha=5)
-    print('Lambtha:', p2.lambtha)
+    print('P(9):', p2.pmf(9))
