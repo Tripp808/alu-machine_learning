@@ -57,6 +57,32 @@ class Poisson:
         pmf_value = (e ** -self.lambtha) * lambtha_k / k_factorial
         return pmf_value
 
+    def cdf(self, k):
+        """
+        Calculates the CDF for a given number of successes
+
+        Parameters:
+        - k (int): Number of successes
+
+        Returns:
+        - CDF value for k
+        """
+        if not isinstance(k, int):
+            k = int(k)
+        if k < 0:
+            return 0
+
+        e = 2.7182818285  # Approximation of Euler's number
+        cdf_value = 0
+        for i in range(k + 1):
+            lambtha_i = self.lambtha ** i
+            i_factorial = 1
+            for j in range(1, i + 1):
+                i_factorial *= j
+            cdf_value += (e ** -self.lambtha) * lambtha_i / i_factorial
+
+        return cdf_value
+
 
 if __name__ == "__main__":
     # Simulating data manually without using numpy
@@ -67,7 +93,7 @@ if __name__ == "__main__":
             4, 5, 5, 4, 5, 5, 5, 5, 4, 5, 6, 5, 5, 6, 5, 5, 6, 5, 5, 6]
 
     p1 = Poisson(data)
-    print('P(9):', p1.pmf(9))
+    print('F(9):', p1.cdf(9))
 
     p2 = Poisson(lambtha=5)
-    print('P(9):', p2.pmf(9))
+    print('F(9):', p2.cdf(9))
