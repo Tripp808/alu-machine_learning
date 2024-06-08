@@ -34,10 +34,13 @@ class Poisson:
             self.lambtha = float(sum(data) / len(data))
 
 if __name__ == "__main__":
-    import numpy as np
+    # Simulating data manually without using numpy
+    data = [5, 4, 6, 6, 3, 7, 5, 6, 4, 5, 5, 6, 4, 4, 5, 5, 5, 5, 4, 6,
+            6, 6, 5, 4, 7, 5, 6, 5, 5, 6, 5, 4, 6, 5, 5, 6, 5, 5, 4, 5,
+            6, 4, 5, 5, 4, 5, 5, 6, 5, 5, 4, 5, 6, 5, 6, 6, 5, 6, 4, 5,
+            6, 4, 5, 6, 4, 4, 5, 5, 5, 4, 4, 6, 5, 5, 5, 5, 5, 6, 4, 5,
+            4, 5, 5, 4, 5, 5, 5, 5, 4, 5, 6, 5, 5, 6, 5, 5, 6, 5, 5, 6]
 
-    np.random.seed(0)
-    data = np.random.poisson(5., 100).tolist()
     p1 = Poisson(data)
     print('Lambtha:', p1.lambtha)
 
