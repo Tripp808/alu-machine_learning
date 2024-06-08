@@ -75,6 +75,22 @@ class Normal:
         base = 1 / (self.stddev * (2 * 3.141592653589793) ** 0.5)
         return base * 2.718281828459045 ** exponent
 
+    def cdf(self, x):
+        """
+        Calculates the value of the CDF for a given x-value
+
+        Parameters:
+        - x (float): The x-value
+
+        Returns:
+        - The CDF value for x
+        """
+        z = self.z_score(x)
+        erf = (2 / (3.141592653589793 ** 0.5)) * (
+            z - (z ** 3) / 3 + (z ** 5) / 10 - (z ** 7) / 42 + (z ** 9) / 216
+        )
+        return 0.5 * (1 + erf)
+
 
 if __name__ == "__main__":
     # Simulating data manually without using numpy
@@ -99,7 +115,7 @@ if __name__ == "__main__":
     ]
 
     n1 = Normal(data)
-    print('PSI(90):', n1.pdf(90))
+    print('PHI(90):', n1.cdf(90))
 
     n2 = Normal(mean=70, stddev=10)
-    print('PSI(90):', n2.pdf(90))
+    print('PHI(90):', n2.cdf(90))
