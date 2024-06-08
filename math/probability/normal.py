@@ -72,7 +72,8 @@ class Normal:
         - The PDF value for x
         """
         exponent = -((x - self.mean) ** 2) / (2 * self.stddev ** 2)
-        return (1 / (self.stddev * (2 * 3.141592653589793) ** 0.5)) * 2.718281828459045 ** exponent
+        base = 1 / (self.stddev * (2 * 3.141592653589793) ** 0.5)
+        return base * 2.718281828459045 ** exponent
 
 
 if __name__ == "__main__":
