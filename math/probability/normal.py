@@ -37,6 +37,30 @@ class Normal:
             variance = sum((x - self.mean) ** 2 for x in data) / len(data)
             self.stddev = variance ** 0.5
 
+    def z_score(self, x):
+        """
+        Calculates the z-score of a given x-value
+
+        Parameters:
+        - x (float): The x-value
+
+        Returns:
+        - The z-score of x
+        """
+        return (x - self.mean) / self.stddev
+
+    def x_value(self, z):
+        """
+        Calculates the x-value of a given z-score
+
+        Parameters:
+        - z (float): The z-score
+
+        Returns:
+        - The x-value of z
+        """
+        return z * self.stddev + self.mean
+
 
 if __name__ == "__main__":
     # Simulating data manually without using numpy
@@ -61,7 +85,10 @@ if __name__ == "__main__":
     ]
 
     n1 = Normal(data)
-    print('Mean:', n1.mean, ', Stddev:', n1.stddev)
+    print('Z(90):', n1.z_score(90))
+    print('X(2):', n1.x_value(2))
 
     n2 = Normal(mean=70, stddev=10)
-    print('Mean:', n2.mean, ', Stddev:', n2.stddev)
+    print()
+    print('Z(90):', n2.z_score(90))
+    print('X(2):', n2.x_value(2))
