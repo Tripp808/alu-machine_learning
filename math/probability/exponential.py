@@ -45,9 +45,26 @@ class Exponential:
         """
         if x < 0:
             return 0
+        
         e = 2.7182818285  # Approximation of Euler's number
         pdf_value = self.lambtha * (e ** (-self.lambtha * x))
         return pdf_value
+
+    def cdf(self, x):
+        """
+        Calculates the CDF for a given time period
+
+        Parameters:
+        - x (float): Time period
+
+        Returns:
+        - CDF value for x
+        """
+        if x < 0:
+            return 0
+        e = 2.7182818285  # Approximation of Euler's number
+        cdf_value = 1 - (e ** (-self.lambtha * x))
+        return cdf_value
 
 
 if __name__ == "__main__":
@@ -64,7 +81,7 @@ if __name__ == "__main__":
             0.9, 0.2, 0.4, 0.6, 0.8, 0.3, 0.5, 0.7, 0.9, 0.4]
 
     e1 = Exponential(data)
-    print('f(1):', e1.pdf(1))
+    print('F(1):', e1.cdf(1))
 
     e2 = Exponential(lambtha=2)
-    print('f(1):', e2.pdf(1))
+    print('F(1):', e2.cdf(1))
