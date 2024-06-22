@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 '''
     a function def posterior(x, n, P, Pr):

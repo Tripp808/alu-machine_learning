@@ -1,7 +1,6 @@
-
 #!/usr/bin/env python3
 '''
-    a function def marginal(x, n, P, Pr):
+    function def marginal(x, n, P, Pr):
     that calculates the marginal probability of obtaining
     the number of successes x in n trials
     with probability of success in each trial being p
