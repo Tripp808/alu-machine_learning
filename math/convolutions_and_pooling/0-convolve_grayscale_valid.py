@@ -26,10 +26,10 @@ def convolve_grayscale_valid(images, kernel):
     # Calculate the dimensions of the output
     output_h = h - kh + 1
     output_w = w - kw + 1
-    
+
     # Initialize the output array with zeros
     output = np.zeros((m, output_h, output_w))
-    
+
     # Perform the convolution operation
     for i in range(output_h):
         for j in range(output_w):
@@ -37,5 +37,5 @@ def convolve_grayscale_valid(images, kernel):
             region = images[:, i:i+kh, j:j+kw]
             # Perform element-wise multiplication and sum the results
             output[:, i, j] = np.sum(region * kernel, axis=(1, 2))
-    
+
     return output
