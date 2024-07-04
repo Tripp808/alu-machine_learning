@@ -1,62 +1,72 @@
 #!/usr/bin/env python3
-
-
 """
-Module for performing convolutions on grayscale images with different types of padding and stride.
+    A function def
+    convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
+    that performs a convolution on grayscale images:
 """
 
 
 import numpy as np
 
 
-def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
+def convolve_grayscale(images, kernel, padding="same", stride=(1, 1)):
     """
-    Performs a convolution on grayscale images with different types of padding and stride.
+    A function def convolve_grayscale(images, kernel,
+        padding='same', stride=(1, 1)):
+    that performs a convolution on grayscale images:
 
-    Parameters:
-    images (numpy.ndarray): The images to be convolved with shape (m, h, w)
-    kernel (numpy.ndarray): The kernel with shape (kh, kw)
-    padding (str or tuple): 'same', 'valid', or a tuple of (ph, pw)
-    stride (tuple): The stride for the height and width of the image (sh, sw)
+    Args:
+        images is a numpy.ndarray with shape (m, h, w)
+        containing multiple grayscale images
+        m is the number of images
+        h is the height in pixels of the images
+        w is the width in pixels of the images
+        kernel is a numpy.ndarray with shape (kh, kw)
+        containing the kernel for the convolution
+        kh is the height of the kernel
+        kw is the width of the kernel
+        padding is either a tuple of (ph, pw), ‘same’, or ‘valid’
+        if ‘same’, performs a same convolution
+        if ‘valid’, performs a valid convolution
+        if a tuple:
+        ph is the padding for the height of the image
+        pw is the padding for the width of the image
+        the image should be padded with 0’s
+        stride is a tuple of (sh, sw)
+        sh is the stride for the height of the image
+        sw is the stride for the width of the image
 
     Returns:
-    numpy.ndarray: The convolved images
+        a numpy.ndarray containing the convolved images
     """
-    m, h, w = images.shape
-    kh, kw = kernel.shape
+    m = images.shape[0]
+    height = images.shape[1]
+    width = images.shape[2]
+    kh = kernel.shape[0]
+    kw = kernel.shape[1]
     sh, sw = stride
-
-    if padding == 'same':
-        ph = (kh - 1) // 2
-        pw = (kw - 1) // 2
-    elif padding == 'valid':
-        ph, pw = 0, 0
+    if padding == "same":
+        ph = int(((height - 1) * stride[0] + kh - height) / 2) + 1
+        pw = int(((width - 1) * stride[1] + kw - width) / 2) + 1
+    elif padding == "valid":
+        ph = 0
+        pw = 0
     else:
-        ph, pw = padding
+        ph = padding[0]
+        pw = padding[1]
+    images = np.pad(images, ((0, 0), (ph, ph), (pw, pw)),
+                    "constant", constant_values=0)
+    ch = ((height + (2 * ph) - kh) // sh) + 1
+    cw = ((width + (2 * pw) - kw) // sw) + 1
+    convolved_image = np.zeros((m, ch, cw))
 
-    # Pad the images with zeros
-    padded_images = np.pad(
-        images,
-        ((0, 0), (ph, ph), (pw, pw)),
-        mode='constant',
-        constant_values=0
-    )
-
-    # Calculate the dimensions of the output
-    output_h = (h + 2 * ph - kh) // sh + 1
-    output_w = (w + 2 * pw - kw) // sw + 1
-
-    # Initialize the output array with zeros
-    output = np.zeros((m, output_h, output_w))
-
-    # Perform the convolution operation
-    for i in range(output_h):
-        for j in range(output_w):
-            # Extract the current region of interest
-            region = padded_images[
-                :, i * sh:i * sh + kh, j * sw:j * sw + kw
-            ]
-            # Perform element-wise multiplication and sum the results
-            output[:, i, j] = np.sum(region * kernel, axis=(1, 2))
-
-    return output
+    i = 0
+    for h in range(0, (height + (2 * ph) - kh + 1), sh):
+        j = 0
+        for w in range(0, (width + (2 * pw) - kw + 1), sw):
+            output = np.sum(images[:, h:h + kh, w:w + kw] *
+                            kernel, axis=1).sum(axis=1)
+            convolved_image[:, i, j] = output
+            j += 1
+        i += 1
+    return convolved_image
