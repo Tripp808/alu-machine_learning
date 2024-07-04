@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
 
+"""
+Module for performing valid convolutions on grayscale images.
+"""
+
 import numpy as np
+
 
 def convolve_grayscale_valid(images, kernel):
     """
@@ -9,10 +14,10 @@ def convolve_grayscale_valid(images, kernel):
 
     Parameters:
     images (numpy.ndarray): The images to be convolved with shape (m, h, w)
-    kernel (numpy.ndarray): The kernel to be used for the convolution with shape (kh, kw)
+    kernel (numpy.ndarray): The kernel to be used for the convolution
 
     Returns:
-    numpy.ndarray: The convolved images with shape (m, h-kh+1, w-kw+1)
+    numpy.ndarray: convolved image shape (m, h-kh+1, w-kw+1)
     """
     # Extract dimensions from the input images and kernel
     m, h, w = images.shape
