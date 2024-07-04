@@ -53,7 +53,9 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     for i in range(output_h):
         for j in range(output_w):
             # Extract the current region of interest
-            region = padded_images[:, i*sh:i*sh+kh, j*sw:j*sw+kw]
+            region = padded_images[
+                :, i * sh:i * sh + kh, j * sw:j * sw + kw
+            ]
             # Perform element-wise multiplication and sum the results
             output[:, i, j] = np.sum(region * kernel, axis=(1, 2))
 
