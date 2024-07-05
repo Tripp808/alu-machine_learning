@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
+Pooling on images
+"""
 
 
 import numpy as np
-"""
+
 
 def pool(images, kernel_shape, stride, mode='max'):
     """
