@@ -27,4 +27,4 @@ class Neuron:
 
         self.W = np.random.normal(size=(1, nx))
         self.b = 0
-        self.A = 0 
+        self.A = 0
