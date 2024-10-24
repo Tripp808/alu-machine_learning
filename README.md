@@ -1,1 +1,1 @@
-ALU Mathematics for Machine Learning - Plotting 
+ALU Machine Learning  
