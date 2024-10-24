@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
 Script to fetch the location of a GitHub user from the GitHub API.
+
+- Prints the location if the user is found.
+- Prints 'Not found' if the user doesn't exist.
+- Handles rate limiting and prints the remaining minutes until the rate limit resets.
 """
 
 import sys
@@ -42,15 +46,15 @@ def get_user_location(api_url):
             reset_time = int(response.headers.get("X-RateLimit-Reset"))
             current_time = datetime.now().timestamp()
             minutes_to_reset = (reset_time - current_time) // 60
-            print(f"Reset in {int(minutes_to_reset)} min")
+            print("Reset in {} min".format(int(minutes_to_reset)))
 
         # Other status codes: Print error
         else:
-            print(f"Error: {response.status_code}")
+            print("Error: {}".format(response.status_code))
 
     except requests.RequestException as e:
         # Handle network or request-related errors
-        print(f"Error: {e}")
+        print("Error: {}".format(e))
 
 
 if __name__ == "__main__":
