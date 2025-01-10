@@ -27,7 +27,8 @@ class NST:
         content_feature: the content later output of the content image
 
     class constructor:
-        def __init__(self, style_image, content_image, alpha=1e4, beta=1)
+        def __init__(self, style_image, content_image, alpha=1e4, beta=1,
+                     var=10):
 
     static methods:
         def scale_image(image):
@@ -35,6 +36,8 @@ class NST:
                 and the largest side is 512 pixels
         def gram_matrix(input_layer):
             calculates gram matrices
+        def variational_cost(generated_image):
+            calculates the variational cost for the generated image
 
     public instance methods:
         def load_model(self):
@@ -42,15 +45,24 @@ class NST:
         def generate_features(self):
             extracts the features used to calculate neural style cost
         def layer_style_cost(self, style_output, gram_target):
-            Calculates the style cost for a single layer
+            calculates the style cost for a single layer
         def style_cost(self, style_outputs):
             calculates the style cost for generated image
+        def content_cost(self, content_output):
+            calculates the content cost for the generated image
+        def total cost(self, generated_image):
+            calculates the total cost for the generated image
+        def compute_grads(self, generated_image):
+            calculates the gradients for the generated image
+        def generate_image(self, iterations=1000, step=None, lr=0.01,
+            beta1=0.9, beta2=0.99):
+            generates the neural style transfered image
     """
     style_layers = ['block1_conv1', 'block2_conv1', 'block3_conv1',
                     'block4_conv1', 'block5_conv1']
     content_layer = 'block5_conv2'
 
-    def __init__(self, style_image, content_image, alpha=1e4, beta=1):
+    def __init__(self, style_image, content_image, alpha=1e4, beta=1, var=10):
         """
         Class constructor for Neural Style Transfer class
 
@@ -86,6 +98,8 @@ class NST:
             raise TypeError("alpha must be a non-negative number")
         if (type(beta) is not float and type(beta) is not int) or beta < 0:
             raise TypeError("beta must be a non-negative number")
+        if (type(var) is not float and type(var) is not int) or var < 0:
+            raise TypeError("var must be a non-negative number")
 
         tf.enable_eager_execution()
 
@@ -93,6 +107,7 @@ class NST:
         self.content_image = self.scale_image(content_image)
         self.alpha = alpha
         self.beta = beta
+        self.var = var
         self.load_model()
         self.generate_features()
 
@@ -187,7 +202,7 @@ class NST:
         if len(input_layer.shape) is not 4:
             raise TypeError("input_layer must be a tensor of rank 4")
         _, h, w, c = input_layer.shape
-        product = int(h * w)
+        product = h * w
         features = tf.reshape(input_layer, (product, c))
         gram = tf.matmul(features, features, transpose_a=True)
         gram = tf.expand_dims(gram, axis=0)
@@ -235,13 +250,10 @@ class NST:
             raise TypeError("style_output must be a tensor of rank 4")
         one, h, w, c = style_output.shape
         if not isinstance(gram_target, (tf.Tensor, tf.Variable)) or \
-           len(gram_target.shape) is not 3 or gram_target.shape != (1, c, c):
+           len(gram_target.shape) is not 3:
             raise TypeError(
                 "gram_target must be a tensor of shape [1, {}, {}]".format(
                     c, c))
-        gram_style = self.gram_matrix(style_output)
-        diff = tf.reduce_mean(tf.square(gram_style - gram_target))
-        return diff
 
     def style_cost(self, style_outputs):
         """
@@ -259,10 +271,132 @@ class NST:
             raise TypeError(
                 "style_outputs must be a list with a length of {}".format(
                     length))
-        weight = 1 / length
-        style_cost = 0
-        for i in range(length):
-            style_cost += (
-                self.layer_style_cost(style_outputs[i],
-                                      self.gram_style_features[i]) * weight)
-        return style_cost
+
+    def content_cost(self, content_output):
+        """
+        Calculates the content cost for generated image
+
+        parameters:
+            content_output [tf.Tensor]:
+                contains content output for the generated image
+
+        returns:
+            the style cost
+        """
+        shape = self.content_feature.shape
+        if not isinstance(content_output, (tf.Tensor, tf.Variable)) or \
+           content_output.shape != shape:
+            raise TypeError(
+                "content_output must be a tensor of shape {}".format(shape))
+
+    def total_cost(self, generated_image):
+        """
+        Calculates the total cost for the generated image
+
+        parameters:
+            generated_image [tf.Tensor of shape (1, nh, nw, 3)]:
+                contains the generated image
+
+        returns:
+            (J, J_content, J_style, J_var) [tuple]:
+                J: total cost
+                J_content: content cost
+                J_style: style cost
+                J_var: variational cost
+        """
+        shape = self.content_image.shape
+        if not isinstance(generated_image, (tf.Tensor, tf.Variable)) or \
+           generated_image.shape != shape:
+            raise TypeError(
+                "generated_image must be a tensor of shape {}".format(shape))
+
+    def compute_grads(self, generated_image):
+        """
+        Calculates the gradients for the generated image
+
+        parameters:
+            generated_image [tf.Tensor of shape (1, nh, nw, 3)]:
+                contains the generated image
+
+        returns:
+            gradients, J_total, J_content, J_style
+                gradients [tf.Tensor]: contatins gradients for generated image
+                J_total: total cost for the generated image
+                J_content: content cost
+                J_style: style cost
+        """
+        shape = self.content_image.shape
+        if not isinstance(generated_image, (tf.Tensor, tf.Variable)) or \
+           generated_image.shape != shape:
+            raise TypeError(
+                "generated_image must be a tensor of shape {}".format(shape))
+
+    def generate_image(self, iterations=1000, step=None, lr=0.01,
+                       beta1=0.9, beta2=0.99):
+        """
+        Generates the neural style transferred image
+
+        parameters:
+            iterations [int]:
+                number of iterations to perform gradient descent over
+            step [int or None]:
+                step at which to print information about training
+                prints:
+                    i: iteration
+                    J_total: total cost for generated image
+                    J_content: content cost
+                    J_style: style cost
+                    J_var: variational cost
+            lr [float]:
+                learning rate for gradient descent
+            beta1 [float]:
+                beta1 parameter for gradient descent
+            beta2 [float[:
+                beta2 parameter for gradient descent
+
+        Gradient descent should be performed using Adam optimization.
+        The generated image should be initialized as the content image.
+        Keep track of the best cost and the image associated with that cost.
+
+        returns:
+            generated_image, cost
+                generated_image: best generated image
+                cost: best cost
+        """
+        if type(iterations) is not int:
+            raise TypeError("iterations must be an integer")
+        if iterations < 0:
+            raise ValueError("iterations must be positive")
+        if step is not None and type(step) is not int:
+            raise TypeError("step must be an integer")
+        if step is not None and (step < 0 or step > iterations):
+            raise ValueError("step must be positive and less than iterations")
+        if type(lr) is not int and type(lr) is not float:
+            raise TypeError("lr must be a number")
+        if lr < 0:
+            raise ValueError("lr must be positive")
+        if type(beta1) is not float:
+            raise TypeError("beta1 must be a float")
+        if beta1 < 0 or beta1 > 1:
+            raise ValueError("beta1 must be in the range [0, 1]")
+        if type(beta2) is not float:
+            raise TypeError("beta2 must be a float")
+        if beta2 < 0 or beta2 > 1:
+            raise ValueError("beta2 must be in the range [0, 1]")
+        generated_image = self.content_image
+        cost = 0
+        return generated_image, cost
+
+    @staticmethod
+    def variational_cost(generated_image):
+        """
+        Calculates the variational cost for the generated image
+
+        parameters:
+            generated_image [tf.Tensor of shape (1, nh, nw, 3)]:
+                contatins the generated image
+
+        returns:
+            the variational cost
+        """
+        return None
