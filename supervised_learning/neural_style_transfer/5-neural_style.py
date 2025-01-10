@@ -3,6 +3,7 @@
 Defines class NST that performs tasks for neural style transfer
 """
 
+
 import numpy as np
 import tensorflow as tf
 
@@ -146,11 +147,16 @@ class NST:
         """
         VGG19_model = tf.keras.applications.VGG19(include_top=False,
                                                   weights='imagenet')
+        VGG19_model.save("VGG19_base_model")
+        custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
+
+        vgg = tf.keras.models.load_model("VGG19_base_model",
+                                         custom_objects=custom_objects)
 
         style_outputs = []
         content_output = None
 
-        for layer in VGG19_model.layers:
+        for layer in vgg.layers:
             if layer.name in self.style_layers:
                 style_outputs.append(layer.output)
             if layer.name in self.content_layer:
@@ -160,7 +166,7 @@ class NST:
 
         outputs = style_outputs + [content_output]
 
-        model = tf.keras.models.Model(VGG19_model.input, outputs)
+        model = tf.keras.models.Model(vgg.input, outputs)
         self.model = model
 
     @staticmethod
@@ -242,19 +248,21 @@ class NST:
         Calculates the style cost for generated image
 
         parameters:
-            style_outputs [list of tf.Tensors of length
-                            len(style_layers)]:
-                contains list of layer style output from model of generated image
+            style_outputs [list of tf.Tensors]:
+                contains stye outputs for the generated image
 
         returns:
-            the total style cost
+            the style cost
         """
-        if len(style_outputs) != len(self.style_layers):
+        length = len(self.style_layers)
+        if type(style_outputs) is not list or len(style_outputs) != length:
             raise TypeError(
-                "style_outputs must be a list of length {}".format(
-                    len(self.style_layers)))
-        total_style_cost = 0
-        for i in range(len(style_outputs)):
-            total_style_cost += self.layer_style_cost(
-                style_outputs[i], self.gram_style_features[i])
-        return total_style_cost
+                "style_outputs must be a list with a length of {}".format(
+                    length))
+        weight = 1 / length
+        style_cost = 0
+        for i in range(length):
+            style_cost += (
+                self.layer_style_cost(style_outputs[i],
+                                      self.gram_style_features[i]) * weight)
+        return style_cost
