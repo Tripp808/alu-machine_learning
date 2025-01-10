@@ -20,11 +20,11 @@ class NST:
         """
         Class constructor for Neural Style Transfer class
         """
-        if type(style_image) is not np.ndarray or \
+        if not isinstance(style_image, np.ndarray) or \
            len(style_image.shape) != 3:
             raise TypeError(
                 "style_image must be a numpy.ndarray with shape (h, w, 3)")
-        if type(content_image) is not np.ndarray or \
+        if not isinstance(content_image, np.ndarray) or \
            len(content_image.shape) != 3:
             raise TypeError(
                 "content_image must be a numpy.ndarray with shape (h, w, 3)")
@@ -38,9 +38,9 @@ class NST:
             raise TypeError(
                 "content_image must be a numpy.ndarray with shape (h, w, 3)")
 
-        if (type(alpha) is not float and type(alpha) is not int) or alpha < 0:
+        if not isinstance(alpha, (float, int)) or alpha < 0:
             raise TypeError("alpha must be a non-negative number")
-        if (type(beta) is not float and type(beta) is not int) or beta < 0:
+        if not isinstance(beta, (float, int)) or beta < 0:
             raise TypeError("beta must be a non-negative number")
 
         tf.enable_eager_execution()
@@ -57,7 +57,7 @@ class NST:
         """
         Rescales an image such that its pixels values are between 0 and 1
         """
-        if type(image) is not np.ndarray or len(image.shape) != 3:
+        if not isinstance(image, np.ndarray) or len(image.shape) != 3:
             raise TypeError(
                 "image must be a numpy.ndarray with shape (h, w, 3)")
         h, w, c = image.shape
@@ -113,20 +113,18 @@ class NST:
         """
         Extracts the features used to calculate neural style cost
         """
-        preprocessed_style = tf.keras.applications.vgg19.preprocess_input(
-            self.style_image * 255.0
-        )
-        preprocessed_content = tf.keras.applications.vgg19.preprocess_input(
-            self.content_image * 255.0
-        )
+        preprocess_input = tf.keras.applications.vgg19.preprocess_input
 
-        style_outputs = self.model(preprocessed_style)[:-1]
-        content_output = self.model(preprocessed_content)[-1]
+        preprocessed_style = preprocess_input(self.style_image * 255.0)
+        preprocessed_content = preprocess_input(self.content_image * 255.0)
+
+        outputs_style = self.model(preprocessed_style)
+        outputs_content = self.model(preprocessed_content)
 
         self.gram_style_features = [
-            self.gram_matrix(style_output) for style_output in style_outputs
+            self.gram_matrix(style_output) for style_output in outputs_style[:-1]
         ]
-        self.content_feature = content_output
+        self.content_feature = outputs_content[-1]
 
     def layer_style_cost(self, style_output, gram_target):
         """
@@ -139,13 +137,15 @@ class NST:
         """
         Calculates the style cost for generated image
         """
-        length = len(self.style_layers)
-        if len(style_outputs) != length:
-            raise ValueError(f"style_outputs must have {length} elements")
+        if not isinstance(style_outputs, list) or \
+           len(style_outputs) != len(self.style_layers):
+            raise ValueError(
+                "style_outputs must be a list with a length of %d" %
+                len(self.style_layers))
 
-        weight = 1.0 / length
-        total_style_cost = sum(
-            weight * self.layer_style_cost(style_outputs[i], self.gram_style_features[i])
-            for i in range(length)
-        )
+        weight = 1.0 / len(self.style_layers)
+        total_style_cost = 0
+        for i in range(len(self.style_layers)):
+            total_style_cost += weight * self.layer_style_cost(
+                style_outputs[i], self.gram_style_features[i])
         return total_style_cost
