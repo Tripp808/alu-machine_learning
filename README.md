@@ -26,7 +26,7 @@ This repository contains projects and implementations in mathematics, machine le
 ### Clone the repository:
 ```bash
 git clone https://github.com/Tripp808/alu-machine_learning.git
-
+```
 ## Contributions:
 Contributions are welcome! Feel free to fork the repository and create a pull request.
 
