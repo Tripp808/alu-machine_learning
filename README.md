@@ -1,6 +1,6 @@
 # alu-machine_learning
 
-This repository contains projects and implementations in mathematics, machine learning pipelines, and supervised learning, with upcoming additions in unsupervised learning.
+This repository contains projects and implementations in mathematics, machine learning pipelines, supervised learning, and unsupervised learning.
 
 ## Contents
 
