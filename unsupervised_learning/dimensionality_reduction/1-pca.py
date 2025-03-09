@@ -7,7 +7,7 @@ Defines function that performs principal components analysis (PCA) on dataset
 import numpy as np
 
 
-def pca(X, var=0.95):
+def pca(X, ndim):
     """
     Performs principal components analysis (PCA) on a dataset
 
@@ -15,20 +15,18 @@ def pca(X, var=0.95):
         X [numpy.ndarray of shape (n, d)]: dataset
             n: number of data points
             d: number of dimensions in each data point
-            all dimensions have a mean of 0 across all data points
-        var [float]: the fraction of the variance that the PCA
-            transformation should maintain
+        ndim [int]: the new dimensionality of the transformed X
 
     returns:
-        W [numpy.ndarray of shape (d, nd)]: the weights matrix that
-            maintains var fraction of X's original variance
-            d: number of dimensions of each data point
-            nd: new dimensionality of the transformed X
+        T [numpy.ndarray of shape (n, ndim)]:
+            containing the transformed version of X
+            n: number of data points
+            ndim: the new dimensionality of the transformed X
     """
     # n, d = X.shape
-    u, s, v = np.linalg.svd(X)
-    ratios = list(x / np.sum(s) for x in s)
-    variance = np.cumsum(ratios)
-    nd = np.argwhere(variance >= var)[0, 0]
-    W = v.T[:, :(nd + 1)]
-    return (W)
+    mean = np.mean(X, axis=0, keepdims=True)
+    A = X - mean
+    u, s, v = np.linalg.svd(A)
+    W = v.T[:, :ndim]
+    T = np.matmul(A, W)
+    return (T)
